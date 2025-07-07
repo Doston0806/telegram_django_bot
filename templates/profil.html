@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>Profil</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Arial';
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        .card {
+            background: navajowhite;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            padding: 25px;
+            max-width: 400px;
+            margin: auto;
+        }
+        .info {
+            font-size: 18px;
+            margin: 15px 0;
+        }
+        .emoji {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>👤 Foydalanuvchi profili</h2>
+        <div class="info "><span class="emoji">📛</span> Ism: <strong>{{ user.first_name }}</strong></div>
+        <div class="info"><span class="emoji">👪</span> Familiya: <strong>{{ user.last_name }}</strong></div>
+        <div class="info"><span class="emoji">🆔</span> Telegram ID: <strong>{{ user.telegram_id }}</strong></div>
+    </div>
+
+<div class="mt-4 d-flex justify-content-center gap-3">
+            <a href="{% url 'edit_user' user.telegram_id %}" class="btn btn-primary">✏️ Tahrirlash</a>
+            <a href="{% url 'statistika' user.telegram_id %}" class="btn btn-warning">🔙 Orqaga</a>
+</div>
+</body>
+</html>

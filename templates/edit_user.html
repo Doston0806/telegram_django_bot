@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foydalanuvchini tahrirlash</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body style="background-color: #f8f9fa;">
+
+    <div class="container mt-5" style="max-width: 600px;">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white text-center">
+                <h4 class="mb-0">✏️ Foydalanuvchini tahrirlash</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="first_name" class="form-label">Ism</label>
+                        <input type="text" class="form-control" id="first_name" name="first_name"
+                            value="{{ form.first_name.value|default:user.first_name }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="last_name" class="form-label">Familiya</label>
+                        <input type="text" class="form-control" id="last_name" name="last_name"
+                            value="{{ form.last_name.value|default:user.last_name }}" required>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'profil' telegram_id %}" class="btn btn-warning">🔙 Orqaga</a>
+                        <button type="submit" class="btn btn-success">💾 Saqlash</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

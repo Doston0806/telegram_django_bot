@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hisob sahifa</title>
+ <style>
+        body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+        h2 { color: #333; }
+        .box { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .stat { margin-bottom: 10px; }
+        .table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .table th, .table td { border: 1px solid #ddd; padding: 8px; }
+        .table th { background-color: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>{{ customer.name }} hisob sahifasi</h2>
+        <div class="stat"><strong>Umumiy xarajatlar:</strong> {{ total_spent }} so'm</div>
+        <div class="stat"><strong>Qarz:</strong> {{ total_debt }} so'm</div>
+
+        <h3>Xaridlar</h3>
+        <table class="table">
+            <tr>
+                <th>Nomi</th>
+                <th>Miqdori</th>
+                <th>Summasi</th>
+                <th>To'langanmi?</th>
+            </tr>
+            {% for p in purchases %}
+            <tr>
+                <td>{{ p.product_name }}</td>
+                <td>{{ p.quantity }}</td>
+                <td>{{ p.amount }}</td>
+                <td>{{ "Ha" if p.paid else "Yo'q" }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>

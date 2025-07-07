@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: DejaVu Sans; }
+        h2, p { margin-bottom: 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #333; padding: 6px; font-size: 12px; }
+        th { background: #eee; }
+        .section-title { margin-top: 25px; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <h2>📊 Haftalik Hisobot</h2>
+    <p><strong>👤 Foydalanuvchi:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+    <p><strong>📅 Oraliq:</strong> {{ start_date }} dan {{ end_date }} gacha</p>
+
+    {% if xarajatlar %}
+        <p class="section-title">💰 Xarajatlar</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Izoh</th>
+                    <th>Summasi</th>
+                    <th>Sana</th>
+                    <th>Soat</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in xarajatlar %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ item.text }}</td>
+                        <td>{{ item.amount }} so'm</td>
+                        <td>{{ item.date|date:"Y-m-d" }}</td>
+                        <td>{{ item.date|date:"H:i" }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+             <tfoot>
+                <tr>
+                    <td colspan="2" class="text-end"><strong>Jami:</strong></td>
+                    <td><strong>{{ jami_xarajat }} so'm</strong></td>
+                </tr>
+    </tfoot>
+        </table>
+    {% endif %}
+
+    {% if qarz_oldim %}
+        <p class="section-title">➖ Qarz Oldim</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Kimdan</th>
+                    <th>Summasi</th>
+                    <th>Sana</th>
+                    <th>Soat</th>
+                    <th>Muddat</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in qarz_oldim %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ item.person_name }}</td>
+                        <td>{{ item.amount }} so'm</td>
+                        <td>{{ item.date|date:"Y-m-d" }}</td>
+                        <td>{{ item.date|date:"H:i" }}</td>
+                        <td>{{ item.date_text }} gacha</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+             <tfoot>
+                <tr>
+                    <td colspan="2" class="text-end"><strong>Jami:</strong></td>
+                    <td><strong>{{ jami_oldim }} so'm</strong></td>
+                </tr>
+    </tfoot>
+        </table>
+    {% endif %}
+
+    {% if qarz_berdim %}
+        <p class="section-title">➕ Qarz Berdim</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Kimga</th>
+                    <th>Summasi</th>
+                    <th>Sana</th>
+                    <th>Soat</th>
+                    <th>Muddati</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in qarz_berdim %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ item.person_name }}</td>
+                        <td>{{ item.amount }} so'm</td>
+                        <td>{{ item.date|date:"Y-m-d" }}</td>
+                        <td>{{ item.date|date:"H:i" }}</td>
+                        <td>{{ item.date_text }} gacha</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+             <tfoot>
+                <tr>
+                    <td colspan="2" class="text-end"><strong>Jami:</strong></td>
+                    <td><strong>{{ jami_berdim }} so'm</strong></td>
+                </tr>
+    </tfoot>
+        </table>
+    {% endif %}
+
+    {% if not xarajatlar and not qarz_oldim and not qarz_berdim %}
+        <p>🚫 Bu hafta uchun hech qanday ma'lumot mavjud emas.</p>
+    {% endif %}
+</body>
+</html>

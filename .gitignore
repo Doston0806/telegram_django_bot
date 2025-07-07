@@ -1,0 +1,35 @@
+# Python tomonidan yaratilgan vaqtinchalik fayllar
+__pycache__/
+*.py[cod]
+
+# Maxfiy ma'lumotlar
+venv
+
+# IDE (PyCharm, VSCode) fayllari
+.idea/
+.vscode/
+
+# Django migration fayllari (istamasangiz)
+**/migrations/
+!*/migrations/__init__.py
+
+# SQLite bazasi
+db.sqlite3
+
+# Yuklangan fayllar va statik fayllar
+media/
+staticfiles/
+
+# Log va boshqa vaqtinchalik fayllar
+*.log
+*.pot
+*.pyc
+
+# OS tizim fayllari
+.DS_Store
+Thumbs.db
+
+telegram_bot/sozlamalar.py
+
+main.py
+
