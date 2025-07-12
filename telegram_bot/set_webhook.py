@@ -1,21 +1,16 @@
-import json
 import asyncio
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from telegram_bot.bot import bot, dp
-from aiogram.types import Update
+from aiogram import Bot
 
-@csrf_exempt
-def telegram_webhook(request):
-    if request.method == "POST":
-        try:
-            data = json.loads(request.body)
-            update = Update.model_validate(data)
+BOT_TOKEN = "8060106619:AAFOlQTaga4yDHElHf5YvnZ6-zDPcO1vM94"
 
-            asyncio.run(dp.feed_update(bot, update))
 
-        except Exception as e:
-            return JsonResponse({"ok": False, "error": str(e)})
+bot = Bot(token=BOT_TOKEN)
 
-        return JsonResponse({"ok": True})
-    return JsonResponse({"ok": False, "error": "not a POST request"})
+async def set_webhook():
+    url = "https://doston06.pythonanywhere.com/bot/"
+    result = await bot.set_webhook(url)
+    print("Webhook o‘rnatildi:", result)
+    await bot.session.close()
+
+if __name__ == "__main__":
+    asyncio.run(set_webhook())
