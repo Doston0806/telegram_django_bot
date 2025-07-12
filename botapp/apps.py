@@ -1,3 +1,4 @@
+# botapp/apps.py
 from django.apps import AppConfig
 
 class BotappConfig(AppConfig):
@@ -5,5 +6,4 @@ class BotappConfig(AppConfig):
     name = 'botapp'
 
     def ready(self):
-        from telegram_bot.set_webhook import set_webhook
-        set_webhook()
+        pass

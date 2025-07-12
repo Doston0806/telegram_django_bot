@@ -568,17 +568,14 @@ def delete_qarz_api(request, qarz_id):
         return JsonResponse({"status": "error", "message": str(e)}, status=400)
 
 
-async def handle_telegram_update(request_body):
-    update = Update.model_validate_json(request_body)
-    await dp.feed_update(bot, update)
-    return HttpResponse()
-
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
-from django.views import View
-
-@method_decorator(csrf_exempt, name='dispatch')
-class TelegramWebhookView(View):
-    def post(self, request, *args, **kwargs):
-        asyncio.run(handle_telegram_update(request.body))
-        return HttpResponse()
+@csrf_exempt
+async def bot_webhook(request):
+    if request.method == 'POST':
+        try:
+            data = request.body.decode('utf-8')
+            update = Update.model_validate_json(data)
+            await dp.feed_update(bot, update)
+        except Exception as e:
+            print(e)
+        return JsonResponse({"ok": True})
+    return JsonResponse({"ok": False})
