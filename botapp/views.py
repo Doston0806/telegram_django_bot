@@ -22,7 +22,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Sum
 from django.utils import timezone
 from telegram_bot.main import bot, dp
-
+from telegram import Update
 
 @api_view(['POST'])
 def add_expense(request):
@@ -568,9 +568,17 @@ def delete_qarz_api(request, qarz_id):
         return JsonResponse({"status": "error", "message": str(e)}, status=400)
 
 
-@csrf_exempt
-async def telegram_webhook(request: HttpRequest):
-    if request.method == "POST":
-        await dp.feed_webhook_update(bot=bot, update=request.body)
-        return JsonResponse({"status": "ok"})
-    return JsonResponse({"error": "invalid method"}, status=405)
+async def handle_telegram_update(request_body):
+    update = Update.model_validate_json(request_body)
+    await dp.feed_update(bot, update)
+    return HttpResponse()
+
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from django.views import View
+
+@method_decorator(csrf_exempt, name='dispatch')
+class TelegramWebhookView(View):
+    def post(self, request, *args, **kwargs):
+        asyncio.run(handle_telegram_update(request.body))
+        return HttpResponse()

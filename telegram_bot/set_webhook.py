@@ -1,7 +1,11 @@
 import asyncio
-from telegram_bot.main import bot
+from aiogram import Bot
+from sozlamalar import BOT_TOKEN
+
+bot = Bot(token=BOT_TOKEN)
 
 async def set():
-    await bot.set_webhook("https://YOUR_DOMAIN/api/bot/")
+    await bot.set_webhook("https://doston06.pythonanywhere.com/api/bot/")  # domeningiz o'rnatiladi
 
-asyncio.run(set())
+def set_webhook():
+    asyncio.run(set())
