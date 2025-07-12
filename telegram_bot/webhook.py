@@ -1,11 +1,10 @@
-import json
+# telegram_bot/views/webhook.py
 import asyncio
+import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from telegram_bot.bot import bot, dp
 from aiogram.types import Update
-
-from asgiref.sync import async_to_sync
 
 @csrf_exempt
 def telegram_webhook(request):
@@ -13,8 +12,11 @@ def telegram_webhook(request):
         try:
             data = json.loads(request.body)
             update = Update.model_validate(data)
-            loop = asyncio.get_event_loop()
-            loop.create_task(dp.feed_update(bot, update))
+
+            # asyncio.run ishlamaydi WSGIda!
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            loop.run_until_complete(dp.feed_update(bot, update))
 
         except Exception as e:
             return JsonResponse({"ok": False, "error": str(e)})
