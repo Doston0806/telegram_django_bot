@@ -11,8 +11,10 @@ from sozlamalar import BOT_TOKEN
 bot = Bot(token=BOT_TOKEN)
 
 async def set_webhook():
-    async with Bot(token=BOT_TOKEN) as bot:
-        await bot.set_webhook("https://doston06.pythonanywhere.com/api/bot/")
+    webhook_url = "https://doston06.pythonanywhere.com/api/bot/"
+    result = await bot.set_webhook(webhook_url)
+    print("Webhook o‘rnatildi:", result)
+    await bot.session.close()
 
 if __name__ == "__main__":
     asyncio.run(set_webhook())
