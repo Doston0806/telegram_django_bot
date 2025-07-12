@@ -1,5 +1,6 @@
 import json
 import pytz
+import asyncio
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
 from rest_framework.decorators import api_view
@@ -568,13 +569,13 @@ def delete_qarz_api(request, qarz_id):
 
 
 @csrf_exempt
-async def bot_webhook(request):
+def bot_webhook(request):
     if request.method == 'POST':
         try:
-            data = request.body.decode('utf-8')
-            update = Update.model_validate_json(data)
-            await dp.feed_update(bot, update)
+            data = json.loads(request.body.decode('utf-8'))
+            update = Update.model_validate(data)
+            asyncio.run(dp.feed_update(bot, update))
         except Exception as e:
-            print(e)
+            print("Webhook Exception:", e)
         return JsonResponse({"ok": True})
     return JsonResponse({"ok": False})

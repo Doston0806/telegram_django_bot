@@ -6,3 +6,4 @@ dp.include_router(router)
 start_scheduler()
 # 2025-07-12 16:01:58,985:
 # 2025-07-12 16:10:49,187:
+#  632
