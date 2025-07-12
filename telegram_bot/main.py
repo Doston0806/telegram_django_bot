@@ -1,8 +1,9 @@
+
+import asyncio
 from aiogram import Bot, Dispatcher
 from sozlamalar import BOT_TOKEN
-from telegram_bot.handlers import router
-from telegram_bot.scheduler import start_scheduler
-
+from handlers import router
+from scheduler import start_scheduler
 
 
 
@@ -14,4 +15,5 @@ async def main():
     start_scheduler()
     await dp.start_polling(bot)
 
-
+if __name__ == "__main__":
+    asyncio.run(main())

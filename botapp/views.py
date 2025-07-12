@@ -20,9 +20,7 @@ from .models import QarzBerdim, QarzOldim
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Sum
 from django.utils import timezone
-from aiogram import  types
-from telegram_bot.bot import bot, dp
-from django.http import JsonResponse, HttpResponseForbidden
+from django.http import JsonResponse
 
 
 
@@ -569,21 +567,3 @@ def delete_qarz_api(request, qarz_id):
     except Exception as e:
         return JsonResponse({"status": "error", "message": str(e)}, status=400)
 
-
-@dp.message()
-async def handle_message(message: types.Message):
-    await message.answer(f"Siz yozdingiz: {message.text}")
-
-@csrf_exempt
-def telegram_webhook(request):
-    if request.method == "POST":
-        try:
-            update = types.Update(**request.json())
-        except Exception:
-            return HttpResponseForbidden("Invalid update")
-
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        loop.run_until_complete(dp.feed_update(bot, update))
-        return JsonResponse({"ok": True})
-    return HttpResponseForbidden()
