@@ -1,6 +1,5 @@
 import json
 import pytz
-import asyncio
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
 from rest_framework.decorators import api_view
@@ -21,7 +20,7 @@ from .models import QarzBerdim, QarzOldim
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Sum
 from django.utils import timezone
-from telegram_bot.main import bot, dp
+from telegram_bot.bot_instance import bot, dp
 from telegram import Update
 
 @api_view(['POST'])
