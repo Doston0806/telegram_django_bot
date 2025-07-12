@@ -3,13 +3,11 @@ from aiogram.filters import state
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo, \
     BufferedInputFile
 from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import StatesGroup, State
 import aiohttp
-from aiogram.utils.keyboard import InlineKeyboardBuilder
-from unicodedata import category
+
 
 from sozlamalar import API_URL
-from states import RegistrationState,AddExpense, XarajatStates
+from telegram_bot.states import RegistrationState,AddExpense, XarajatStates
 
 router = Router()
 
@@ -19,7 +17,12 @@ def get_main_keyboard(user_id: int):
         [InlineKeyboardButton(text="💵 Balance", callback_data="balance")],
         [InlineKeyboardButton(text="📝 Bugungi xarajatlar", callback_data="view_today")],
         [InlineKeyboardButton(text="💸 Bugungi qarzlar", callback_data="view_debts")],
-        [InlineKeyboardButton(text="🖥 Saytni ochish",  url = f"http://127.0.0.1:8000/api/statistika/{user_id}/")],
+        [
+            InlineKeyboardButton(
+                text="Saytni ochish",
+                web_app=WebAppInfo(url=f"https://doston2006.pythonanywhere.com/api/statistika/{user_id}/")
+            )
+        ],
         [InlineKeyboardButton(text="📄 Hisobot" , callback_data="hisobot")],
         [InlineKeyboardButton(text="🤖 Bot haqida" , callback_data="haqida")],
     ])
@@ -73,7 +76,7 @@ async def get_last_name(msg: Message, state: FSMContext):
 
 
     keyboard = get_main_keyboard(msg.from_user.id)
-    await msg.answer("🏠 Bosh sahifa", reply_markup=keyboard)
+    await msg.answer("\t\t🏠 Bosh sahifa", reply_markup=keyboard)
 
 @router.callback_query(F.data == "balance")
 async def balance_start(call: CallbackQuery, state: FSMContext):
@@ -111,7 +114,7 @@ async def process_balance(message: Message, state: FSMContext):
     await message.answer(f"✅ Balansingiz yangilandi: {new_balance} so'm")
     await state.clear()
     keyboard = get_main_keyboard(message.from_user.id)
-    await message.answer("🏠 Bosh sahifa", reply_markup=keyboard)
+    await message.answer("\t\t🏠 Bosh sahifa", reply_markup=keyboard)
 
 @router.callback_query(F.data == "haqida")
 async def haqida_start(call: CallbackQuery, state: FSMContext):
@@ -131,7 +134,7 @@ async def haqida_start(call: CallbackQuery, state: FSMContext):
 async def orqaga_start(call: CallbackQuery, state: FSMContext):
     await call.answer()
     keyboard = get_main_keyboard(call.message.from_user.id)
-    await call.message.answer("🏠 Bosh sahifa", reply_markup=keyboard)
+    await call.message.answer("\t\t🏠 Bosh sahifa", reply_markup=keyboard)
 
 
 def make_qarz_buttons(qarzlar: list):
@@ -427,7 +430,7 @@ async def get_expense_amount(msg: Message, state: FSMContext):
                 await msg.answer("❌ Saqlashda xatolik yuz berdi.")
 
     keyboard = get_main_keyboard(msg.from_user.id)
-    await msg.answer("🏠 Bosh sahifa", reply_markup=keyboard)
+    await msg.answer("\t\t🏠 Bosh sahifa", reply_markup=keyboard)
     await state.clear()
 
 @router.callback_query(F.data == "hisobot")
@@ -459,7 +462,7 @@ async def send_weekly_report(call: CallbackQuery):
                 await call.message.answer("❌ Hisobotni olishda xatolik yuz berdi.")
 
     keyboard = get_main_keyboard(call.message.from_user.id)
-    await call.message.answer("🏠 Bosh sahifa", reply_markup=keyboard)
+    await call.message.answer("\t\t🏠 Bosh sahifa", reply_markup=keyboard)
 
 
 @router.callback_query(F.data == "daily")
@@ -496,7 +499,7 @@ async def back_hisobot_handler(call: CallbackQuery, state: FSMContext):
 async def back_handler(call: CallbackQuery, state: FSMContext):
     await call.answer()
     keyboard = get_main_keyboard(call.message.from_user.id)
-    await call.message.edit_text("🏠 Bosh sahifa", reply_markup=keyboard)
+    await call.message.edit_text("\t\t🏠 Bosh sahifa", reply_markup=keyboard)
 
 
 

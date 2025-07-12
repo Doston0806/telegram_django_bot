@@ -29,7 +29,6 @@ staticfiles/
 .DS_Store
 Thumbs.db
 
-telegram_bot/sozlamalar.py
-
+sozlamalar.py
 main.py
 

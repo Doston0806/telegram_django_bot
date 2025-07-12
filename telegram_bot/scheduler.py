@@ -1,31 +1,37 @@
-# scheduler.py
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
+
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.cron import CronTrigger
+import asyncio
+import pytz
+from datetime import datetime
+
 from aiogram import Bot
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.client.default import DefaultBotProperties
+from sozlamalar import BOT_TOKEN
+from botapp.models import User  # ← foydalanuvchilar modeli
+from aiogram.types import Message
 
-# Inline tugmalar
-keyboard = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text="📝 Bugungi xarajatlar", callback_data="view_today")],
-    [InlineKeyboardButton(text="💸 Bugungi qarzlar", callback_data="view_debts")],
-])
+bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
 
-# Bu funksiya soat 22:00 da ishlaydi
-async def send_nightly_reminder(bot: Bot):
-    # Foydalanuvchi IDlarini shu yerdan olasiz (bu oddiy usulda - realda bazadan olish kerak)
-    user_ids = [7801349824]  # vaqtincha sinov uchun qo'lda yoziladi
 
-    for user_id in user_ids:
+
+async def send_daily_summary():
+    """
+    Har kuni soat 22:00 da yuboriladigan xabar.
+    """
+    users = User.objects.all()
+    for user in users:
         try:
-            await bot.send_message(
-                chat_id=user_id,
-                text="📢 Bugungi xarajatlaringizni kiritishni unutmang!",
-                reply_markup=keyboard
-            )
+            await bot.send_message(user.chat_id, "🔔 Kun yakuni eslatmasi: Xarajatlaringizni kiritishni unutmang!")
         except Exception as e:
-            print(f"❌ {user_id} ga yuborib bo‘lmadi: {e}")
+            print(f"Xatolik: {e} foydalanuvchi {user.chat_id} ga yuborishda")
 
-# Scheduler ni ishga tushurish
-def start_scheduler(bot: Bot):
-    scheduler = AsyncIOScheduler(timezone="Asia/Tashkent")
-    scheduler.add_job(send_nightly_reminder, "cron", hour=5, minute=6, args=[bot])
+
+def start_scheduler():
+    scheduler = AsyncIOScheduler(timezone=pytz.timezone("Asia/Tashkent"))
+    scheduler.add_job(send_daily_summary, CronTrigger(hour=22, minute=0))
     scheduler.start()
