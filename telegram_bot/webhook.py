@@ -13,7 +13,9 @@ def telegram_webhook(request):
         try:
             data = json.loads(request.body)
             update = Update.model_validate(data)
-            async_to_sync(dp.feed_update)(bot, update)
+            loop = asyncio.get_event_loop()
+            loop.create_task(dp.feed_update(bot, update))
+
         except Exception as e:
             return JsonResponse({"ok": False, "error": str(e)})
         return JsonResponse({"ok": True})
