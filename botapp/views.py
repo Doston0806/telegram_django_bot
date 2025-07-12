@@ -574,19 +574,16 @@ def delete_qarz_api(request, qarz_id):
 async def handle_message(message: types.Message):
     await message.answer(f"Siz yozdingiz: {message.text}")
 
-# Webhook view
 @csrf_exempt
 def telegram_webhook(request):
     if request.method == "POST":
         try:
-            update = types.Update.model_validate_json(request.body)
+            update = types.Update(**request.json())
+        except Exception:
+            return HttpResponseForbidden("Invalid update")
 
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            loop.run_until_complete(dp.feed_update(bot, update))
-
-            return JsonResponse({"ok": True})
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=400)
-    else:
-        return HttpResponseForbidden()
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop.run_until_complete(dp.feed_update(bot, update))
+        return JsonResponse({"ok": True})
+    return HttpResponseForbidden()
