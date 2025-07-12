@@ -16,11 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path , include
-from botapp import views
-
+from telegram_bot.set_webhook import telegram_webhook
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('botapp.urls')),
-    path('bot/', views.bot_webhook),
+    path('bot/', telegram_webhook),
 
 ]
