@@ -1,12 +1,10 @@
 import json
 import pytz
-
+import asyncio
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from sympy.integrals.meijerint_doc import category
-
 from .models import User, Expense
 from .forms import QarzForm, QarzOldimForm
 from .serializers import ExpenseSerializer
@@ -14,7 +12,7 @@ from django.shortcuts import render
 from datetime import date, datetime, timedelta
 from collections import defaultdict
 from django.utils.timezone import localtime
-from django.db.models.functions import TruncDate
+from django.http import JsonResponse, HttpRequest
 from django import forms
 from django.shortcuts import get_object_or_404, redirect
 from .utils import generate_pdf
@@ -22,11 +20,9 @@ from django.http import FileResponse
 from .models import QarzBerdim, QarzOldim
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Sum
-
-
-from django.template.loader import get_template
-from .serializers import UserSerializer
 from django.utils import timezone
+from telegram_bot.main import bot, dp
+
 
 @api_view(['POST'])
 def add_expense(request):
@@ -570,3 +566,11 @@ def delete_qarz_api(request, qarz_id):
         return JsonResponse({"status": "success"})
     except Exception as e:
         return JsonResponse({"status": "error", "message": str(e)}, status=400)
+
+
+@csrf_exempt
+async def telegram_webhook(request: HttpRequest):
+    if request.method == "POST":
+        await dp.feed_webhook_update(bot=bot, update=request.body)
+        return JsonResponse({"status": "ok"})
+    return JsonResponse({"error": "invalid method"}, status=405)
