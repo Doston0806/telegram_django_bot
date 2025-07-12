@@ -26,7 +26,7 @@ def get_main_keyboard(user_id: int):
         [InlineKeyboardButton(text="📄 Hisobot" , callback_data="hisobot")],
         [InlineKeyboardButton(text="🤖 Bot haqida" , callback_data="haqida")],
     ])
-@router.message(F.text == "/start")
+@router.message(F.text.startswith("/start"))
 async def start_cmd(msg: Message, state: FSMContext):
     telegram_id = msg.from_user.id
 
