@@ -5,7 +5,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
-import asyncio
 import pytz
 from datetime import datetime
 
@@ -26,9 +25,9 @@ async def send_daily_summary():
     users = User.objects.all()
     for user in users:
         try:
-            await bot.send_message(user.chat_id, "🔔 Kun yakuni eslatmasi: Xarajatlaringizni kiritishni unutmang!")
+            await bot.send_message(user.telegram_id, "🔔 Kun yakuni eslatmasi: Xarajatlaringizni kiritishni unutmang!")
         except Exception as e:
-            print(f"Xatolik: {e} foydalanuvchi {user.chat_id} ga yuborishda")
+            print(f"Xatolik: {e} foydalanuvchi {user.telegram_id} ga yuborishda")
 
 
 def start_scheduler():

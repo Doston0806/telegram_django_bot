@@ -7,7 +7,7 @@ import aiohttp
 
 
 from sozlamalar import API_URL
-from telegram_bot.states import RegistrationState,AddExpense, XarajatStates
+from states import RegistrationState,AddExpense, XarajatStates
 
 router = Router()
 
