@@ -31,7 +31,6 @@ urlpatterns = [
     path("get_balance/<int:telegram_id>/", views.get_balance),
     path('qarzlar_list/<int:user_id>/<str:tur>/', views.qarzlar_list, name='qarzlar_list'),
     path("delete_qarz/<int:qarz_id>/", views.delete_qarz_api, name="delete_qarz_api"),
-    path('bot/', views.bot_webhook),
 
 ]
 
