@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-halamc0go11z9(9w)$n!8)1v(7+5m)xd=pk7*9%8@d@_n@15so
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['doston2006.pythonanywhere.com']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -124,8 +124,8 @@ STATICFILES_DIRS = [
     BASE_DIR / "botapp" / "static",
 ]
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
