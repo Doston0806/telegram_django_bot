@@ -211,7 +211,7 @@ async def show_qarzlar(callback: CallbackQuery, state: FSMContext):
     if not filtered:
         await callback.message.answer("Sizda bu turdagi qarz yozuvlari mavjud emas.")
     else:
-        await callback.message.edit_text(f"Qarzlar ro'yxati \n{"Kimning qarzini o'chirmoqchisiz" if tur == 'berdim' else "Kimga qarzingizni berdingiz" }:", reply_markup=make_qarz_buttons(filtered))
+        await callback.message.edit_text(f"Qarzlar ro'yxati \n{'Kimning qarzini ochirmoqchisiz' if tur == 'berdim' else 'Kimga qarzingizni berdingiz' }:", reply_markup=make_qarz_buttons(filtered))
 
 
 @router.callback_query(F.data.startswith("delete_qarz:"))
