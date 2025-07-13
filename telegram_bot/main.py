@@ -6,14 +6,15 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 django.setup()
 import asyncio
+import logging
 from aiogram import Bot, Dispatcher
 from sozlamalar import BOT_TOKEN
 from handlers import router
 from scheduler import start_scheduler
 
+logging.basicConfig(level=logging.INFO)
 
-
-bot = Bot(token=BOT_TOKEN)
+bot = Bot(token=BOT_TOKEN, proxy='http://proxy.server:3128')
 dp = Dispatcher()
 
 async def main():
