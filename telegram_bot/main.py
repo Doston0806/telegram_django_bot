@@ -2,19 +2,19 @@ import os
 import django
 import sys
 
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 django.setup()
-import asyncio
 import logging
+import asyncio
 from aiogram import Bot, Dispatcher
 from sozlamalar import BOT_TOKEN
 from handlers import router
 from scheduler import start_scheduler
 
-logging.basicConfig(level=logging.INFO)
 
-bot = Bot(token=BOT_TOKEN, proxy='http://proxy.server:3128')
+bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
 async def main():
@@ -23,4 +23,5 @@ async def main():
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
-    asyncio.run(main())
+   asyncio.run(main())
+

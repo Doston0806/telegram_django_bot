@@ -20,7 +20,7 @@ def get_main_keyboard(user_id: int):
         [
             InlineKeyboardButton(
                 text="Saytni ochish",
-            web_app=WebAppInfo(url=f"https://doston2006.pythonanywhere.com/api/statistika/{user_id}/")
+            web_app=WebAppInfo(url=f"https://doston6.pythonanywhere.com/api/statistika/{user_id}/")
             )
         ],
         [InlineKeyboardButton(text="📄 Hisobot" , callback_data="hisobot")],
