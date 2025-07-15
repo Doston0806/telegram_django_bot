@@ -17,7 +17,6 @@ venv
 db.sqlite3
 
 # Yuklangan fayllar va statik fayllar
-media/
 
 # Log va boshqa vaqtinchalik fayllar
 *.log
