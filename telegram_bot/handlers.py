@@ -1,5 +1,4 @@
 from aiogram import Router, F
-from aiogram.filters import state
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo, \
     BufferedInputFile
 from aiogram.fsm.context import FSMContext
@@ -7,7 +6,7 @@ import aiohttp
 
 
 from telegram_bot.sozlamalar import API_URL
-from states import RegistrationState,AddExpense, XarajatStates
+from telegram_bot.states import RegistrationState,AddExpense, XarajatStates
 import os
 
 
