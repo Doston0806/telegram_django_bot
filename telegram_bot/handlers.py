@@ -6,7 +6,7 @@ from aiogram.fsm.context import FSMContext
 import aiohttp
 
 
-from sozlamalar import API_URL
+from telegram_bot.sozlamalar import API_URL
 from states import RegistrationState,AddExpense, XarajatStates
 import os
 

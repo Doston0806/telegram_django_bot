@@ -6,12 +6,10 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 import pytz
-from datetime import datetime
 
 from aiogram import Bot
 from aiogram.client.default import DefaultBotProperties
 from botapp.models import User  # ← foydalanuvchilar modeli
-from aiogram.types import Message
 from dotenv import load_dotenv
 load_dotenv()
 

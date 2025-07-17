@@ -12,7 +12,7 @@ django.setup()
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from telegram_bot.handlers import router
-from scheduler import start_scheduler
+from telegram_bot.scheduler import start_scheduler
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
