@@ -1,7 +1,6 @@
 import json
 import pytz
 import asyncio
-from django.http import  HttpResponse
 from django.views.decorators.http import require_POST
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -22,6 +21,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Sum
 from django.utils import timezone
 from django.http import JsonResponse
+from xhtml2pdf import pisa
+from io import BytesIO
+from django.http import HttpResponse
+from django.template.loader import get_template
 
 
 
@@ -261,6 +264,17 @@ def edit_user(request, telegram_id):
         'telegram_id': telegram_id,
     })
 
+
+def render_to_pdf(template_src, context_dict={}):
+    template = get_template(template_src)
+    html = template.render(context_dict)
+
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), dest=result)
+
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return None
 
 def weekly_expense_pdf(request, telegram_id):
     user = get_object_or_404(User, telegram_id=telegram_id)
