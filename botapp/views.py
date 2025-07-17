@@ -10,6 +10,7 @@ from .forms import QarzForm, QarzOldimForm
 from .serializers import ExpenseSerializer
 from django.shortcuts import render
 from datetime import date, datetime, timedelta
+from django.utils.timezone import make_aware
 from collections import defaultdict
 from django.utils.timezone import localtime
 from django import forms
@@ -166,19 +167,19 @@ def statistika(request, telegram_id):
         })
 
 
-        qarz_berganlar = QarzBerdim.objects.filter(user=user, is_deleted=False).order_by('-date')
-        qarz_olganlar = QarzOldim.objects.filter(user=user, is_deleted=False).order_by('-id')
+    qarz_berganlar = QarzBerdim.objects.filter(user=user, is_deleted=False).order_by('-date')
+    qarz_olganlar = QarzOldim.objects.filter(user=user, is_deleted=False).order_by('-id')
 
-        balance_expenses = Expense.objects.filter(user=user, category="Balance")
-        xarajatlar = Expense.objects.filter(user=user).exclude(category="Balance")
+    balance_expenses = Expense.objects.filter(user=user, category="Balance")
+    xarajatlar = Expense.objects.filter(user=user).exclude(category="Balance")
 
 
-        balance_sum = sum(e.amount for e in balance_expenses)
-        expenses_sum = sum(e.amount for e in xarajatlar)
-        qarz_olgan_sum = sum(q.amount for q in qarz_olganlar)
-        qarz_bergan_sum = sum(q.amount for q in qarz_berganlar)
+    balance_sum = sum(e.amount for e in balance_expenses)
+    expenses_sum = sum(e.amount for e in xarajatlar)
+    qarz_olgan_sum = sum(q.amount for q in qarz_olganlar)
+    qarz_bergan_sum = sum(q.amount for q in qarz_berganlar)
 
-        real_balance = balance_sum + qarz_olgan_sum - qarz_bergan_sum - expenses_sum
+    real_balance = balance_sum + qarz_olgan_sum - qarz_bergan_sum - expenses_sum
 
     return render(request, "qarzlar.html", {
         "kunlik_malumotlar": tartiblangan,
@@ -263,20 +264,49 @@ def edit_user(request, telegram_id):
 
 def weekly_expense_pdf(request, telegram_id):
     user = get_object_or_404(User, telegram_id=telegram_id)
+
     today = datetime.today().date()
     start_date = today - timedelta(days=6)
 
+    start_datetime = make_aware(datetime.combine(start_date, datetime.min.time()))
+    end_datetime = make_aware(datetime.combine(today, datetime.max.time()))
+
     expenses = Expense.objects.filter(
         user=user,
-        date__date__range=[start_date, today]
+        date__range=[start_datetime, end_datetime]
     ).order_by("date")
 
     xarajatlar = expenses.filter(category="Xarajat")
-    qarz_berdim = QarzBerdim.objects.filter(user=user, is_deleted=False).order_by('-date')
-    qarz_oldim = QarzOldim.objects.filter(user=user, is_deleted=False).order_by('-id')
+
+    qarz_berdim = QarzBerdim.objects.filter(
+        user=user,
+        date__range=[start_datetime, end_datetime],
+    ).order_by('-date')
+
+    qarz_oldim = QarzOldim.objects.filter(
+        user=user,
+        date__range=[start_datetime, end_datetime],
+    ).order_by('-date')
+
+    qarz_qaytarildi = QarzBerdim.objects.filter(
+        user = user,
+        is_deleted=True,
+        delete_date__range=[start_datetime, end_datetime],
+    ).order_by('-date')
+
+    qarz_qaytardim = QarzOldim.objects.filter(
+        user = user,
+        is_deleted=True,
+        delete_date__range=[start_datetime, end_datetime],
+    ).order_by('-date')
+
     jami_xarajat = expenses.aggregate(Sum("amount"))["amount__sum"] or 0
     jami_oldim = qarz_oldim.aggregate(Sum("amount"))["amount__sum"] or 0
     jami_berdim = qarz_berdim.aggregate(Sum("amount"))["amount__sum"] or 0
+    jami_qaytardim = qarz_qaytardim.aggregate(Sum("amount"))["amount__sum"] or 0
+    jami_qaytardi = qarz_qaytarildi.aggregate(Sum("amount"))["amount__sum"] or 0
+
+
     context = {
         "user": user,
         "start_date": start_date,
@@ -284,9 +314,13 @@ def weekly_expense_pdf(request, telegram_id):
         "xarajatlar": xarajatlar,
         "qarz_oldim": qarz_oldim,
         "qarz_berdim": qarz_berdim,
+        "qarz_qaytardim": qarz_qaytardim,
+        "qarz_qaytarildi": qarz_qaytarildi,
         "jami_xarajat": jami_xarajat,
         "jami_oldim": jami_oldim,
         "jami_berdim": jami_berdim,
+        "jami_qaytardim": jami_qaytardim,
+        "jami_qaytardi": jami_qaytardi,
     }
 
     pdf_buffer = generate_pdf("weekly_expense_pdf.html", context)
@@ -294,7 +328,6 @@ def weekly_expense_pdf(request, telegram_id):
         return FileResponse(pdf_buffer, as_attachment=True, filename="haftalik_hisobot.pdf")
     else:
         return HttpResponse("❌ PDF yaratishda xatolik yuz berdi.", status=500)
-
 def daily_report(request, telegram_id):
     user = User.objects.get(telegram_id=telegram_id)
     today = date.today()
@@ -435,6 +468,7 @@ def delete_qarz(request, qarz_id):
     qarz = get_object_or_404(QarzBerdim, id=qarz_id)
     telegram_id = qarz.user.telegram_id
     qarz.is_deleted = True
+    qarz.delete_date = timezone.now()
     qarz.save()
     return redirect('qarzlar', telegram_id=telegram_id)
 
@@ -457,6 +491,7 @@ def delete_qarz_oldim(request, qarz_id):
     qarz = get_object_or_404(QarzOldim, id=qarz_id)
     telegram_id = qarz.user.telegram_id
     qarz.is_deleted = True
+    qarz.delete_date = timezone.now()
     qarz.save()
     return redirect('qarzlar', telegram_id=telegram_id)
 
@@ -472,7 +507,7 @@ def add_xarajat(request):
             data = json.loads(request.body)
 
             telegram_id = data.get("telegram_id")
-            text = data.get("text")  # Masalan: "Nonushta", "Avtobus"
+            text = data.get("text")
             amount = data.get("amount")
 
             user = User.objects.get(telegram_id=telegram_id)
@@ -555,15 +590,38 @@ def qarzlar_list(request, user_id, tur):
 @csrf_exempt
 def delete_qarz_api(request, qarz_id):
     try:
-        # Ikkala modelni tekshirib chiqamiz
         try:
             obj = QarzBerdim.objects.get(id=qarz_id)
         except QarzBerdim.DoesNotExist:
             obj = QarzOldim.objects.get(id=qarz_id)
 
         obj.is_deleted = True
+        obj.delete_date = timezone.now()
         obj.save()
         return JsonResponse({"status": "success"})
     except Exception as e:
         return JsonResponse({"status": "error", "message": str(e)}, status=400)
 
+def qarzlar_jadvali(request, telegram_id):
+    user = User.objects.get(telegram_id=telegram_id)
+
+    qarz_qaytarildi = QarzBerdim.objects.filter(
+        user=user,
+        is_deleted=True,
+    ).order_by('-date')
+
+    qarz_qaytardim = QarzOldim.objects.filter(
+        user=user,
+        is_deleted=True,
+    ).order_by('-date')
+
+    jami_qaytardim = qarz_qaytardim.aggregate(Sum("amount"))["amount__sum"] or 0
+    jami_qaytardi = qarz_qaytarildi.aggregate(Sum("amount"))["amount__sum"] or 0
+
+    return render(request, "qarzlar_jadvali.html", {
+        "telegram_id": telegram_id,
+        "qarz_qaytarildi": qarz_qaytarildi,
+        "qarz_qaytardim": qarz_qaytardim,
+        "jami_qaytardim": jami_qaytardim,
+        "jami_qaytardi": jami_qaytardi,
+    })

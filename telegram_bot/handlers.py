@@ -17,11 +17,11 @@ def get_main_keyboard(user_id: int):
         [InlineKeyboardButton(text="💵 Balance", callback_data="balance")],
         [InlineKeyboardButton(text="📝 Bugungi xarajatlar", callback_data="view_today")],
         [InlineKeyboardButton(text="💸 Bugungi qarzlar", callback_data="view_debts")],
-        [
-            InlineKeyboardButton(
-                text="Saytni ochish",
-            web_app=WebAppInfo(url=f"https://doston6.pythonanywhere.com/api/statistika/{user_id}/")
-            )
+        [InlineKeyboardButton(text="Saytni ochish", url=f"http://127.0.0.1:8000/api/statistika/{user_id}/")
+            # InlineKeyboardButton(
+            #     text="Saytni ochish",
+            # web_app=WebAppInfo(url=f"https://doston6.pythonanywhere.com/api/statistika/{user_id}/")
+            # )
         ],
         [InlineKeyboardButton(text="📄 Hisobot" , callback_data="hisobot")],
         [InlineKeyboardButton(text="🤖 Bot haqida" , callback_data="haqida")],

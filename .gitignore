@@ -4,7 +4,7 @@ __pycache__/
 
 # Maxfiy ma'lumotlar
 venv
-
+.env
 # IDE (PyCharm, VSCode) fayllari
 .idea/
 .vscode/

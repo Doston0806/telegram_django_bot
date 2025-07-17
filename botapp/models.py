@@ -47,6 +47,7 @@ class QarzBerdim(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     date_text = models.CharField(max_length=100, blank=True, null=True)  # Sana matni
     is_deleted = models.BooleanField(default=False)
+    delete_date = models.DateTimeField(null=True, blank=True)
 
 
     def __str__(self):
@@ -64,6 +65,7 @@ class QarzOldim(models.Model):
     date = models.DateTimeField(default=timezone.now)
     date_text = models.CharField(max_length=100, blank=True, null=True)
     is_deleted = models.BooleanField(default=False)
+    delete_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.person_name} ({self.amount})"

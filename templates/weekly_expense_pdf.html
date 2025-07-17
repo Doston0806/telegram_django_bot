@@ -16,7 +16,6 @@
     <p><strong>👤 Foydalanuvchi:</strong> {{ user.first_name }} {{ user.last_name }}</p>
     <p><strong>📅 Oraliq:</strong> {{ start_date }} dan {{ end_date }} gacha</p>
 
-    {% if xarajatlar %}
         <p class="section-title">💰 Xarajatlar</p>
         <table>
             <thead>
@@ -29,15 +28,19 @@
                 </tr>
             </thead>
             <tbody>
+            {% if xarajatlar %}
                 {% for item in xarajatlar %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
                         <td>{{ item.text }}</td>
                         <td>{{ item.amount }} so'm</td>
-                        <td>{{ item.date|date:"Y-m-d" }}</td>
+                        <td>{{ item.date|date:"d-m-Y" }}</td>
                         <td>{{ item.date|date:"H:i" }}</td>
                     </tr>
                 {% endfor %}
+            {% else %}
+                <tr><td colspan="5" style="text-align:center;">🚫 Bu hafta davomida hech qandey harajatlar qilinmagan </td> </tr>
+            {% endif %}
             </tbody>
              <tfoot>
                 <tr>
@@ -46,9 +49,7 @@
                 </tr>
     </tfoot>
         </table>
-    {% endif %}
 
-    {% if qarz_oldim %}
         <p class="section-title">➖ Qarz Oldim</p>
         <table>
             <thead>
@@ -62,16 +63,21 @@
                 </tr>
             </thead>
             <tbody>
+            {% if qarz_oldim %}
                 {% for item in qarz_oldim %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
                         <td>{{ item.person_name }}</td>
                         <td>{{ item.amount }} so'm</td>
-                        <td>{{ item.date|date:"Y-m-d" }}</td>
+                        <td>{{ item.date|date:"d-m-Y" }}</td>
                         <td>{{ item.date|date:"H:i" }}</td>
                         <td>{{ item.date_text }} gacha</td>
                     </tr>
                 {% endfor %}
+            {% else %}
+                <tr><td colspan="6" style="text-align:center;">🚫 Bu hafta davomida hech qandey qarz olmagansiz </td> </tr>
+            {% endif %}
+
             </tbody>
              <tfoot>
                 <tr>
@@ -80,9 +86,42 @@
                 </tr>
     </tfoot>
         </table>
-    {% endif %}
 
-    {% if qarz_berdim %}
+        <p class="section-title">💸 Qarz Qaytardim</p>
+        <table>
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Kimga</th>
+                <th>Summasi</th>
+                <th>Sana</th>
+                <th>Soat</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% if qarz_qaytardim %}
+                {% for item in qarz_qaytardim %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ item.person_name }}</td>
+                        <td>{{ item.amount }} so'm</td>
+                        <td>{{ item.date|date:"d-m-Y" </td>
+                        <td>{{ item.date|date:"H:i" }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="5" style="text-align:center;">Bu hafta ichida hech kimga qarzini qaytarmagansiz</td>
+            </tr>
+            {% endif %}
+            </tbody>
+             <tfoot>
+                <tr>
+                    <td colspan="2" class="text-end"><strong>Jami:</strong></td>
+                    <td><strong>{{ jami_qaytardim }} so'm</strong></td>
+                </tr>
+    </tfoot>
+        </table>
         <p class="section-title">➕ Qarz Berdim</p>
         <table>
             <thead>
@@ -96,16 +135,21 @@
                 </tr>
             </thead>
             <tbody>
+            {% if qarz_berdim %}
                 {% for item in qarz_berdim %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
                         <td>{{ item.person_name }}</td>
                         <td>{{ item.amount }} so'm</td>
-                        <td>{{ item.date|date:"Y-m-d" }}</td>
+                        <td>{{ item.date|date:"d-m-Y" }}</td>
                         <td>{{ item.date|date:"H:i" }}</td>
                         <td>{{ item.date_text }} gacha</td>
                     </tr>
                 {% endfor %}
+
+            {% else %}
+             <tr><td colspan="6" style="text-align:center;">🚫 Bu hafta davomida hech qandey qarz olmagansiz </td> </tr>
+            {% endif %}
             </tbody>
              <tfoot>
                 <tr>
@@ -114,7 +158,42 @@
                 </tr>
     </tfoot>
         </table>
-    {% endif %}
+
+    <p class="section-title">✔️ Qarz Qaytarildi</p>
+    <table>
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Kimdan</th>
+            <th>Summasi</th>
+            <th>Sana</th>
+            <th>Soat</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if qarz_qaytarildi %}
+            {% for item in qarz_qaytarildi %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ item.person_name }}</td>
+                    <td>{{ item.amount }} so'm</td>
+                    <td>{{ item.date|date:"d-m-Y"}}</td>
+                    <td>{{ item.date|date:"H:i"}}</td>
+                </tr>
+            {% endfor %}
+        {% else %}
+        <tr>
+            <td colspan="5" style="text-align:center;">Bu haftada hech kim qarzini qaytarmadi</td>
+        </tr>
+        {% endif %}
+        </tbody>
+        <tfoot>
+                <tr>
+                    <td colspan="2" class="text-end"><strong>Jami:</strong></td>
+                    <td><strong>{{ jami_qaytardi }} so'm</strong></td>
+                </tr>
+    </tfoot>
+    </table>
 
     {% if not xarajatlar and not qarz_oldim and not qarz_berdim %}
         <p>🚫 Bu hafta uchun hech qanday ma'lumot mavjud emas.</p>
