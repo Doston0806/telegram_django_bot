@@ -265,16 +265,7 @@ def edit_user(request, telegram_id):
     })
 
 
-def render_to_pdf(template_src, context_dict={}):
-    template = get_template(template_src)
-    html = template.render(context_dict)
 
-    result = BytesIO()
-    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), dest=result)
-
-    if not pdf.err:
-        return HttpResponse(result.getvalue(), content_type='application/pdf')
-    return None
 
 def weekly_expense_pdf(request, telegram_id):
     user = get_object_or_404(User, telegram_id=telegram_id)
