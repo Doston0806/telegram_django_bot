@@ -1,8 +1,6 @@
-# telegram_bot/main.py
 import os
 import sys
 import django
-import asyncio
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -13,7 +11,7 @@ django.setup()
 
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
-from handlers import router
+from telegram_bot.handlers import router
 from scheduler import start_scheduler
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
