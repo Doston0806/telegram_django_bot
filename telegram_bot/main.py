@@ -1,43 +1,42 @@
+# telegram_bot/main.py
 import os
-import sys
 import django
-import asyncio
 from dotenv import load_dotenv
 
-# .env faylni yuklab olamiz
-load_dotenv()
-
-# Django'ni sozlash
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
-django.setup()
-
-# Aiogram kutubxonalarini yuklaymiz
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
-from aiogram.client.default import DefaultBotProperties
+from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
 
-# Bot tokenini olamiz
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-
-if not BOT_TOKEN:
-    raise ValueError("❌ BOT_TOKEN topilmadi. .env faylga to‘g‘ri yozilganiga ishonch hosil qiling.")
-
-# Botni yaratamiz (parse_mode endi default orqali beriladi!)
-bot = Bot(
-    token=BOT_TOKEN,
-    default=DefaultBotProperties(parse_mode=ParseMode.HTML)
-)
-
-# Dispatcher
-dp = Dispatcher()
-
-# Router va scheduler
 from telegram_bot.handlers import router
-from telegram_bot.scheduler import start_scheduler
 
-# Botni ishga tushiruvchi asinxron funksiya
-async def start_bot():
-    dp.include_router(router)
-    start_scheduler()
-    await dp.start_polling(bot)
+import sys
+from aiohttp import web
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
+django.setup()
+load_dotenv()
+
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+WEBHOOK_URL = os.getenv("WEBHOOK_URL")
+
+bot = Bot(token=BOT_TOKEN, default=ParseMode.HTML)
+dp = Dispatcher(storage=MemoryStorage())
+dp.include_router(router)
+
+async def on_startup(bot: Bot):
+    await bot.set_webhook(WEBHOOK_URL)
+
+async def on_shutdown(bot: Bot):
+    await bot.delete_webhook()
+
+async def start_webhook(request):
+    # Bu endpoint faqat POST request uchun
+    return await SimpleRequestHandler(
+        dispatcher=dp,
+        bot=bot,
+        handle_in_background=False,
+    ).handler(request)
+
+# Django URLConf orqali start_webhook view sifatida ishlatiladi

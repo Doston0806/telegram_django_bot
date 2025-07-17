@@ -16,8 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path , include
+from telegram_bot.main import start_webhook
+from django.views.decorators.csrf import csrf_exempt
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('botapp.urls')),
+    path('webhook/', csrf_exempt(start_webhook)),
 
 ]
