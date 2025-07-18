@@ -8,7 +8,7 @@ import django
 #
 # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # load_dotenv(os.path.join(BASE_DIR, ".env"))
-# sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
 
