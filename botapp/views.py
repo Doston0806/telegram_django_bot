@@ -21,11 +21,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Sum
 from django.utils import timezone
 from django.http import JsonResponse
-from xhtml2pdf import pisa
-from io import BytesIO
 from django.http import HttpResponse
-from telegram import Update, Bot
-from telegram_bot.main import bot, dispatcher
+from telegram import Update
+from telegram_bot.main import application
 
 
 
@@ -634,10 +632,10 @@ def qarzlar_jadvali(request, telegram_id):
     })
 
 @csrf_exempt
-def telegram_webhook(request):
+def webhook_view(request):
     if request.method == "POST":
         data = json.loads(request.body)
-        update = Update.de_json(data, bot)
-        dispatcher.process_update(update)
+        update = Update.de_json(data, application.bot)
+        application.update_queue.put_nowait(update)
         return JsonResponse({"status": "ok"})
-    return JsonResponse({"status": "only post allowed"})
+    return JsonResponse({"error": "Invalid request"}, status=400)
