@@ -41,8 +41,8 @@
         ⋮
       </button>
       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-        <li><a class="dropdown-item" href="{% url 'profil' telegram_id %}">Profil</a></li>
-        <li><a class="dropdown-item" href="{% url 'balance' telegram_id %}">Balance</a></li>
+        <li><a class="dropdown-item" href="{% url 'profil' telegram_id %}">👤 Profil</a></li>
+        <li><a class="dropdown-item" href="{% url 'balance' telegram_id %}">💰 Balance</a></li>
         <li><a class="dropdown-item" href="{% url 'qarzlar' telegram_id %}">🔙 Orqaga</a></li>
       </ul>
     </div>
@@ -66,7 +66,7 @@
         {% if qarz_qaytarildi %}
             {% for item in qarz_qaytarildi %}
                 <tr>
-                    <td>Qarzini Qaytardi</td>
+                    <td>Qarzni Qaytardi</td>
                     <td>{{ item.person_name }}</td>
                     <td>{{ item.amount }} so'm</td>
                     <td>{{ item.delete_date|date:"d-m-Y"}}</td>
@@ -103,7 +103,7 @@
         {% if qarz_qaytardim %}
             {% for item in qarz_qaytardim %}
                 <tr>
-                    <td>Qarzimni Qaytardim</td>
+                <td>Qarzni Qaytardim</td>
                     <td>{{ item.person_name }}</td>
                     <td>{{ item.amount }} so'm</td>
                     <td>{{ item.delete_date|date:"d-m-Y"}}</td>
