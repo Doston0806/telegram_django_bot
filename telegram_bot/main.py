@@ -5,10 +5,16 @@ from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from handlers import router
 import os
-from dotenv import load_dotenv
 
-load_dotenv()
 BOT_TOKEN = os.getenv("BOT_TOKEN")
+if BOT_TOKEN :
+
+    print("BOT_TOKEN:", BOT_TOKEN)
+
+
+if not BOT_TOKEN:
+    raise ValueError("❌ BOT_TOKEN environment variable topilmadi!")
+
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(storage=MemoryStorage())
 dp.include_router(router)
