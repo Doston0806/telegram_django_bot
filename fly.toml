@@ -1,0 +1,11 @@
+app = "telegram-django-bot"
+primary_region = "sin"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  DJANGO_SETTINGS_MODULE = "config.settings"
+  PORT = "8000"
+
+
