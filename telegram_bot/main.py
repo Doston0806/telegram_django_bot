@@ -7,10 +7,8 @@ from handlers import router
 import os
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-if BOT_TOKEN :
-
-    print("BOT_TOKEN:", BOT_TOKEN)
-
+print("BOT_TOKEN exists:", "BOT_TOKEN" in os.environ)
+print("BOT_TOKEN value:", os.getenv("BOT_TOKEN"))
 
 if not BOT_TOKEN:
     raise ValueError("❌ BOT_TOKEN environment variable topilmadi!")
