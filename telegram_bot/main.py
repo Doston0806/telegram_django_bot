@@ -6,10 +6,8 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from telegram_bot.handlers import router
 import os
 from dotenv import load_dotenv
-from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(BASE_DIR / ".env")
+load_dotenv()
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 bot = Bot(token=BOT_TOKEN)
