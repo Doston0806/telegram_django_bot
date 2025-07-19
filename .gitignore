@@ -14,7 +14,6 @@ venv
 !*/migrations/__init__.py
 
 # SQLite bazasi
-db.sqlite3
 
 # Yuklangan fayllar va statik fayllar
 
