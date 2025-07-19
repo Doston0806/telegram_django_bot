@@ -3,7 +3,7 @@ import asyncio
 import logging
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
-from telegram_bot.handlers import router
+from handlers import router
 import os
 from dotenv import load_dotenv
 
