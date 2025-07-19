@@ -24,7 +24,9 @@ from django.http import JsonResponse
 from xhtml2pdf import pisa
 from io import BytesIO
 from django.http import HttpResponse
-from django.template.loader import get_template
+from telegram import Update, Bot
+from telegram_bot.main import bot, dispatcher
+
 
 
 
@@ -630,3 +632,12 @@ def qarzlar_jadvali(request, telegram_id):
         "jami_qaytardim": jami_qaytardim,
         "jami_qaytardi": jami_qaytardi,
     })
+
+@csrf_exempt
+def telegram_webhook(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        update = Update.de_json(data, bot)
+        dispatcher.process_update(update)
+        return JsonResponse({"status": "ok"})
+    return JsonResponse({"status": "only post allowed"})
