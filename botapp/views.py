@@ -22,8 +22,6 @@ from django.db.models import Sum
 from django.utils import timezone
 from django.http import JsonResponse
 from django.http import HttpResponse
-from telegram import Update
-from telegram_bot.main import application
 
 
 
@@ -631,11 +629,3 @@ def qarzlar_jadvali(request, telegram_id):
         "jami_qaytardi": jami_qaytardi,
     })
 
-@csrf_exempt
-def webhook_view(request):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        update = Update.de_json(data, application.bot)
-        application.update_queue.put_nowait(update)
-        return JsonResponse({"status": "ok"})
-    return JsonResponse({"error": "Invalid request"}, status=400)
